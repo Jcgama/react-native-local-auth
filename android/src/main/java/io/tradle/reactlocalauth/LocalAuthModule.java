@@ -95,7 +95,7 @@ public class LocalAuthModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void hasTouchID() {
+  public boolean hasTouchID() {
     final Activity activity = getCurrentActivity();
     if (activity == null) {
         return false;
