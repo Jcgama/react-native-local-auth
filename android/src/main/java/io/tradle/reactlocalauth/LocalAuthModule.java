@@ -146,7 +146,7 @@ public class LocalAuthModule extends ReactContextBaseJavaModule {
           return null;
       }
 
-      mKeyguardManager = (mKeyguardManager) activity.getSystemService(Context.KEYGUARD_SERVICE);
+      mKeyguardManager = (KeyguardManager) activity.getSystemService(Context.KEYGUARD_SERVICE);
 
       return mKeyguardManager;
   }
