@@ -98,15 +98,11 @@ public class LocalAuthModule extends ReactContextBaseJavaModule {
   public void hasTouchID(final Callback reactErrorCallback, final Callback reactSuccessCallback) {
     final Activity activity = getCurrentActivity();
     if (activity == null) {
-        return;
+        reactErrorCallback.invoke("Something went wrong...");
     }
 
     final boolean hasFingerPrintAvailable = isFingerprintAuthAvailable();
-    // if (result == FingerprintAuthConstants.IS_SUPPORTED) {
-    //     reactSuccessCallback.invoke("Fingerprint");
-    // } else {
-    //     reactErrorCallback.invoke("Not supported.", result);
-    // }
+
     if (hasFingerPrintAvailable == false) {
       reactErrorCallback.invoke("Not supported");
     }
@@ -115,13 +111,11 @@ public class LocalAuthModule extends ReactContextBaseJavaModule {
 
   private boolean isFingerprintAuthAvailable() {
     if (android.os.Build.VERSION.SDK_INT < 23) {
-        // return FingerprintAuthConstants.NOT_SUPPORTED;
         return false;
     }
 
     final Activity activity = getCurrentActivity();
     if (activity == null) {
-        // return FingerprintAuthConstants.NOT_AVAILABLE; // we can't do the check
         return false;
     }
 
@@ -129,21 +123,10 @@ public class LocalAuthModule extends ReactContextBaseJavaModule {
 
     final FingerprintManager fingerprintManager = (FingerprintManager) activity.getSystemService(Context.FINGERPRINT_SERVICE);
 
-    // if (fingerprintManager == null || !fingerprintManager.isHardwareDetected()) {
-    //     return FingerprintAuthConstants.NOT_PRESENT;
-    // }
-
-    // if (mkeyguardManager == null || !mkeyguardManager.isKeyguardSecure()) {
-    //     return FingerprintAuthConstants.NOT_AVAILABLE;
-    // }
-
-    // if (!fingerprintManager.hasEnrolledFingerprints()) {
-    //     return FingerprintAuthConstants.NOT_ENROLLED;
-    // }
-    // return FingerprintAuthConstants.IS_SUPPORTED;
     if (fingerprintManager.isHardwareDetected() && fingerprintManager.hasEnrolledFingerprints()) {
       return true;
     }
+
     return false;
   }
 
@@ -160,14 +143,5 @@ public class LocalAuthModule extends ReactContextBaseJavaModule {
 
       return mKeyguardManager;
   }
-
-  private final class FingerprintAuthConstants {
-    public static final int IS_SUPPORTED = 100;
-    public static final int NOT_SUPPORTED = 101;
-    public static final int NOT_PRESENT = 102;
-    public static final int NOT_AVAILABLE = 103;
-    public static final int NOT_ENROLLED = 104;
-    public static final int AUTHENTICATION_FAILED = 105;
-    public static final int AUTHENTICATION_CANCELED = 106;
-  }
+  
 }
