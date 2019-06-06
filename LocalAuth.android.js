@@ -27,7 +27,7 @@ module.exports = {
 
   hasTouchID() {
     return new Promise((resolve, reject) => {
-      RNLocalAuth.hasTouchID(error => return reject(error), success => return resolve(success))
+      RNLocalAuth.hasTouchID(error => reject(error), success => resolve(success))
     })
   },
  
