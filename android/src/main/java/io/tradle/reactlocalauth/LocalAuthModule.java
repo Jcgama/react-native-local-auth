@@ -98,7 +98,7 @@ public class LocalAuthModule extends ReactContextBaseJavaModule {
   public void hasTouchID(final Callback reactErrorCallback, final Callback reactSuccessCallback) {
     final Activity activity = getCurrentActivity();
     if (activity == null) {
-        return false;
+        return;
     }
 
     final boolean hasFingerPrintAvailable = isFingerprintAuthAvailable();
