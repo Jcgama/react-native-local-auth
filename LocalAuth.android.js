@@ -12,19 +12,23 @@ import { NativeModules } from 'react-native'
 const { RNLocalAuth } = NativeModules
 
 module.exports = {
-  hasTouchID() {
-    return new Promise((resolve, reject) => {
-      NativeTouchID.hasTouchID(
-        (error, code) => {
-          return reject(createError(error));
-        },
-        (biometryType) => {
-          return resolve(biometryType);
-        }
-      );
-    });
-  },
+  // hasTouchID() {
+  //   return new Promise((resolve, reject) => {
+  //     NativeTouchID.hasTouchID(
+  //       (error, code) => {
+  //         return reject(createError(error));
+  //       },
+  //       (biometryType) => {
+  //         return resolve(biometryType);
+  //       }
+  //     );
+  //   });
+  // },
 
+  hasTouchID() {
+    return RNLocalAuth.hasTouchID()
+  }
+ 
   isDeviceSecure() {
     return RNLocalAuth.isDeviceSecure()
   },

@@ -95,46 +95,53 @@ public class LocalAuthModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void hasTouchID(final Callback reactErrorCallback, final Callback reactSuccessCallback) {
+  public void hasTouchID() {
     final Activity activity = getCurrentActivity();
     if (activity == null) {
-        return;
+        return false;
     }
 
-    int result = isFingerprintAuthAvailable();
-    if (result == FingerprintAuthConstants.IS_SUPPORTED) {
-        reactSuccessCallback.invoke("Fingerprint");
-    } else {
-        reactErrorCallback.invoke("Not supported.", result);
-    }
+    boolean result = isFingerprintAuthAvailable();
+    // if (result == FingerprintAuthConstants.IS_SUPPORTED) {
+    //     reactSuccessCallback.invoke("Fingerprint");
+    // } else {
+    //     reactErrorCallback.invoke("Not supported.", result);
+    // }
+    return result
   }
 
-  private int isFingerprintAuthAvailable() {
+  private boolean isFingerprintAuthAvailable() {
     if (android.os.Build.VERSION.SDK_INT < 23) {
-        return FingerprintAuthConstants.NOT_SUPPORTED;
+        // return FingerprintAuthConstants.NOT_SUPPORTED;
+        return false
     }
 
     final Activity activity = getCurrentActivity();
     if (activity == null) {
-        return FingerprintAuthConstants.NOT_AVAILABLE; // we can't do the check
+        // return FingerprintAuthConstants.NOT_AVAILABLE; // we can't do the check
+        return false
     }
 
     final KeyguardManager mkeyguardManager = getKeyguardManager();
 
     final FingerprintManager fingerprintManager = (FingerprintManager) activity.getSystemService(Context.FINGERPRINT_SERVICE);
 
-    if (fingerprintManager == null || !fingerprintManager.isHardwareDetected()) {
-        return FingerprintAuthConstants.NOT_PRESENT;
-    }
+    // if (fingerprintManager == null || !fingerprintManager.isHardwareDetected()) {
+    //     return FingerprintAuthConstants.NOT_PRESENT;
+    // }
 
-    if (mkeyguardManager == null || !mkeyguardManager.isKeyguardSecure()) {
-        return FingerprintAuthConstants.NOT_AVAILABLE;
-    }
+    // if (mkeyguardManager == null || !mkeyguardManager.isKeyguardSecure()) {
+    //     return FingerprintAuthConstants.NOT_AVAILABLE;
+    // }
 
-    if (!fingerprintManager.hasEnrolledFingerprints()) {
-        return FingerprintAuthConstants.NOT_ENROLLED;
+    // if (!fingerprintManager.hasEnrolledFingerprints()) {
+    //     return FingerprintAuthConstants.NOT_ENROLLED;
+    // }
+    // return FingerprintAuthConstants.IS_SUPPORTED;
+    if (fingerprintManager.isHardwareDetected() && fingerprintManager.hasEnrolledFingerprints()) {
+      return true
     }
-    return FingerprintAuthConstants.IS_SUPPORTED;
+    return false
   }
 
   private KeyguardManager getKeyguardManager() {
