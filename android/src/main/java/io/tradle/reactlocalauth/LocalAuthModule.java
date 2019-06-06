@@ -107,19 +107,19 @@ public class LocalAuthModule extends ReactContextBaseJavaModule {
     // } else {
     //     reactErrorCallback.invoke("Not supported.", result);
     // }
-    return result
+    return result;
   }
 
   private boolean isFingerprintAuthAvailable() {
     if (android.os.Build.VERSION.SDK_INT < 23) {
         // return FingerprintAuthConstants.NOT_SUPPORTED;
-        return false
+        return false;
     }
 
     final Activity activity = getCurrentActivity();
     if (activity == null) {
         // return FingerprintAuthConstants.NOT_AVAILABLE; // we can't do the check
-        return false
+        return false;
     }
 
     final KeyguardManager mkeyguardManager = getKeyguardManager();
@@ -139,9 +139,9 @@ public class LocalAuthModule extends ReactContextBaseJavaModule {
     // }
     // return FingerprintAuthConstants.IS_SUPPORTED;
     if (fingerprintManager.isHardwareDetected() && fingerprintManager.hasEnrolledFingerprints()) {
-      return true
+      return true;
     }
-    return false
+    return false;
   }
 
   private KeyguardManager getKeyguardManager() {
