@@ -14,7 +14,7 @@ const { RNLocalAuth } = NativeModules
 module.exports = {
   hasTouchID() {
     return new Promise((resolve, reject) => {
-      NativeTouchID.isSupported(
+      NativeTouchID.hasTouchID(
         (error, code) => {
           return reject(createError(error));
         },
