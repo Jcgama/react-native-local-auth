@@ -119,18 +119,15 @@ public class LocalAuthModule extends ReactContextBaseJavaModule {
         return FingerprintAuthConstants.NOT_AVAILABLE; // we can't do the check
     }
 
-    final KeyguardManager keyguardManager = getKeyguardManager();
+    final KeyguardManager mkeyguardManager = getKeyguardManager();
 
-    // We should call it only when we absolutely sure that API >= 23.
-    // Otherwise we will get the crash on older versions.
-    // TODO: migrate to FingerprintManagerCompat
     final FingerprintManager fingerprintManager = (FingerprintManager) activity.getSystemService(Context.FINGERPRINT_SERVICE);
 
     if (fingerprintManager == null || !fingerprintManager.isHardwareDetected()) {
         return FingerprintAuthConstants.NOT_PRESENT;
     }
 
-    if (keyguardManager == null || !keyguardManager.isKeyguardSecure()) {
+    if (mkeyguardManager == null || !mkeyguardManager.isKeyguardSecure()) {
         return FingerprintAuthConstants.NOT_AVAILABLE;
     }
 
@@ -141,17 +138,17 @@ public class LocalAuthModule extends ReactContextBaseJavaModule {
   }
 
   private KeyguardManager getKeyguardManager() {
-      if (keyguardManager != null) {
-          return keyguardManager;
+      if (mKeyguardManager != null) {
+          return mKeyguardManager;
       }
       final Activity activity = getCurrentActivity();
       if (activity == null) {
           return null;
       }
 
-      keyguardManager = (KeyguardManager) activity.getSystemService(Context.KEYGUARD_SERVICE);
+      mKeyguardManager = (mKeyguardManager) activity.getSystemService(Context.KEYGUARD_SERVICE);
 
-      return keyguardManager;
+      return mKeyguardManager;
   }
 
   private final class FingerprintAuthConstants {
