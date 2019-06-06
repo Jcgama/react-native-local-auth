@@ -27,7 +27,7 @@ module.exports = {
 
   hasTouchID() {
     return RNLocalAuth.hasTouchID()
-  }
+  },
  
   isDeviceSecure() {
     return RNLocalAuth.isDeviceSecure()
