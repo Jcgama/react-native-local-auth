@@ -13,7 +13,16 @@ const { RNLocalAuth } = NativeModules
 
 module.exports = {
   hasTouchID() {
-    return Promise.reject(createError('RCTTouchIDNotSupported'))
+    return new Promise((resolve, reject) => {
+      NativeTouchID.isSupported(
+        (error, code) => {
+          return reject(createError(error));
+        },
+        (biometryType) => {
+          return resolve(biometryType);
+        }
+      );
+    });
   },
 
   isDeviceSecure() {

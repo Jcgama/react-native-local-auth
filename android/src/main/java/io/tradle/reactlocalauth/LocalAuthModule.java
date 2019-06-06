@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.Intent;
 import android.content.Context;
+import android.hardware.fingerprint.FingerprintManager;
+import android.os.Build;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -89,5 +91,75 @@ public class LocalAuthModule extends ReactContextBaseJavaModule {
       authPromise.reject(E_FAILED_TO_SHOW_AUTH, e);
       authPromise = null;
     }
+  }
+
+  @ReactMethod
+  public void hasTouchID(final Callback reactErrorCallback, final Callback reactSuccessCallback) {
+    final Activity activity = getCurrentActivity();
+    if (activity == null) {
+        return;
+    }
+
+    int result = isFingerprintAuthAvailable();
+    if (result == FingerprintAuthConstants.IS_SUPPORTED) {
+        reactSuccessCallback.invoke("Fingerprint");
+    } else {
+        reactErrorCallback.invoke("Not supported.", result);
+    }
+  }
+
+  private int isFingerprintAuthAvailable() {
+    if (android.os.Build.VERSION.SDK_INT < 23) {
+        return FingerprintAuthConstants.NOT_SUPPORTED;
+    }
+
+    final Activity activity = getCurrentActivity();
+    if (activity == null) {
+        return FingerprintAuthConstants.NOT_AVAILABLE; // we can't do the check
+    }
+
+    final KeyguardManager keyguardManager = getKeyguardManager();
+
+    // We should call it only when we absolutely sure that API >= 23.
+    // Otherwise we will get the crash on older versions.
+    // TODO: migrate to FingerprintManagerCompat
+    final FingerprintManager fingerprintManager = (FingerprintManager) activity.getSystemService(Context.FINGERPRINT_SERVICE);
+
+    if (fingerprintManager == null || !fingerprintManager.isHardwareDetected()) {
+        return FingerprintAuthConstants.NOT_PRESENT;
+    }
+
+    if (keyguardManager == null || !keyguardManager.isKeyguardSecure()) {
+        return FingerprintAuthConstants.NOT_AVAILABLE;
+    }
+
+    if (!fingerprintManager.hasEnrolledFingerprints()) {
+        return FingerprintAuthConstants.NOT_ENROLLED;
+    }
+    return FingerprintAuthConstants.IS_SUPPORTED;
+  }
+
+  private KeyguardManager getKeyguardManager() {
+      if (keyguardManager != null) {
+          return keyguardManager;
+      }
+      final Activity activity = getCurrentActivity();
+      if (activity == null) {
+          return null;
+      }
+
+      keyguardManager = (KeyguardManager) activity.getSystemService(Context.KEYGUARD_SERVICE);
+
+      return keyguardManager;
+  }
+
+  private final class FingerprintAuthConstants {
+    public static final int IS_SUPPORTED = 100;
+    public static final int NOT_SUPPORTED = 101;
+    public static final int NOT_PRESENT = 102;
+    public static final int NOT_AVAILABLE = 103;
+    public static final int NOT_ENROLLED = 104;
+    public static final int AUTHENTICATION_FAILED = 105;
+    public static final int AUTHENTICATION_CANCELED = 106;
   }
 }
