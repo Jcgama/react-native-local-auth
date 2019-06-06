@@ -108,9 +108,9 @@ public class LocalAuthModule extends ReactContextBaseJavaModule {
     //     reactErrorCallback.invoke("Not supported.", result);
     // }
     if (hasFingerPrintAvailable == false) {
-      return reactErrorCallback.invoke("Not supported");
+      reactErrorCallback.invoke("Not supported");
     }
-    return reactSuccessCallback.invoke("Supported and ready to go!");
+    reactSuccessCallback.invoke("Supported and ready to go!");
   }
 
   private boolean isFingerprintAuthAvailable() {
