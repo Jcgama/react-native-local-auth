@@ -97,14 +97,11 @@ public class LocalAuthModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void hasTouchID(final Callback reactErrorCallback, final Callback reactSuccessCallback) {
     final Activity activity = getCurrentActivity();
-    if (activity == null) {
-        reactErrorCallback.invoke("Something went wrong...");
-    }
-
     final boolean hasFingerPrintAvailable = isFingerprintAuthAvailable();
 
-    if (hasFingerPrintAvailable == false) {
+    if (activity == null || hasFingerPrintAvailable == false) {
       reactErrorCallback.invoke("Not supported");
+      return;
     }
     reactSuccessCallback.invoke("Supported and ready to go!");
   }
