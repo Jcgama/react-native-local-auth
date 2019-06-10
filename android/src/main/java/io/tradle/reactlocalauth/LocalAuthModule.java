@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.Context;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
+import java.lang.NullPointerException;
+import java.lang.SecurityException;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -120,11 +122,15 @@ public class LocalAuthModule extends ReactContextBaseJavaModule {
 
     final FingerprintManager fingerprintManager = (FingerprintManager) activity.getSystemService(Context.FINGERPRINT_SERVICE);
 
-    if (fingerprintManager.isHardwareDetected() && fingerprintManager.hasEnrolledFingerprints()) {
-      return true;
-    }
+    if (fingerprintManager == null) return false;
 
-    return false;
+    try {
+      if (fingerprintManager.isHardwareDetected() && fingerprintManager.hasEnrolledFingerprints()) {
+        return true;
+      }
+    } catch (SecurityException | NullPointerException e) {
+      return false;
+    }
   }
 
   private KeyguardManager getKeyguardManager() {
