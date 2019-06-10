@@ -131,6 +131,7 @@ public class LocalAuthModule extends ReactContextBaseJavaModule {
     } catch (SecurityException | NullPointerException e) {
       return false;
     }
+    return false;
   }
 
   private KeyguardManager getKeyguardManager() {
